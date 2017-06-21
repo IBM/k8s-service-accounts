@@ -1,0 +1,24 @@
+---
+# Create a pod with the no-access service account
+kind: Pod
+apiVersion: v1
+metadata:
+  name: no-access-pod
+spec:
+  serviceAccountName: no-access-sa
+  containers:
+  - name: no-access-container
+    image: ibmcloudprivate/k8s-service-accounts
+
+
+---
+# Create a pod with the secret-access service account
+kind: Pod
+apiVersion: v1
+metadata:
+  name: secret-access-pod
+spec:
+  serviceAccountName: secret-access-sa
+  containers:
+  - name: secret-access-container
+    image: ibmcloudprivate/k8s-service-accounts

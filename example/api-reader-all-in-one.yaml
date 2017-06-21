@@ -1,0 +1,136 @@
+# =====================================================
+#                         _
+#  ___  ___  ___ _ __ ___| |_ ___
+# / __|/ _ \/ __| '__/ _ \ __/ __|
+# \__ \  __/ (__| | |  __/ |_\__ \
+# |___/\___|\___|_|  \___|\__|___/
+#                          secrets
+# =====================================================
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: api-access-secret
+type: Opaque
+data:
+  username: YWRtaW4=
+  password: cGFzc3dvcmQ=
+
+# =====================================================
+#                      _                                          _
+#  ___  ___ _ ____   _(_) ___ ___  __ _  ___ ___ ___  _   _ _ __ | |_ ___
+# / __|/ _ \ '__\ \ / / |/ __/ _ \/ _` |/ __/ __/ _ \| | | | '_ \| __/ __|
+# \__ \  __/ |   \ V /| | (_|  __/ (_| | (_| (_| (_) | |_| | | | | |_\__ \
+# |___/\___|_|    \_/ |_|\___\___|\__,_|\___\___\___/ \__,_|_| |_|\__|___/
+#                                                          serviceaccounts
+# =====================================================
+---
+# Service account for preventing API access
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: no-access-sa
+---
+# Service account for accessing secrets API
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: secret-access-sa
+
+# =====================================================
+#            _
+#  _ __ ___ | | ___  ___
+# | '__/ _ \| |/ _ \/ __|
+# | | | (_) | |  __/\__ \
+# |_|  \___/|_|\___||___/
+#                   roles
+# =====================================================
+---
+# A role with no access
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  name: no-access-role
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: [""]
+  verbs: [""]
+
+---
+# A role for reading/listing secrets
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  name: secret-access-role
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["secrets"]
+  verbs: ["get", "watch", "list"]
+# =====================================================
+#            _      _     _           _ _
+#  _ __ ___ | | ___| |__ (_)_ __   __| (_)_ __   __ _ ___
+# | '__/ _ \| |/ _ \ '_ \| | '_ \ / _` | | '_ \ / _` / __|
+# | | | (_) | |  __/ |_) | | | | | (_| | | | | | (_| \__ \
+# |_|  \___/|_|\___|_.__/|_|_| |_|\__,_|_|_| |_|\__, |___/
+#                                   rolebindings|___/
+# =====================================================
+---
+# The role binding to combine the no-access service account and role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: no-access-rb
+subjects:
+- kind: ServiceAccount
+  name: no-access-sa
+roleRef:
+  kind: Role
+  name: no-access-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# The role binding to combine the secret-access service account and role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: secret-access-rb
+subjects:
+- kind: ServiceAccount
+  name: secret-access-sa
+roleRef:
+  kind: Role
+  name: secret-access-role
+  apiGroup: rbac.authorization.k8s.io
+
+# =====================================================
+#                  _
+#  _ __   ___   __| |___
+# | '_ \ / _ \ / _` / __|
+# | |_) | (_) | (_| \__ \
+# | .__/ \___/ \__,_|___/
+# |_|                pods
+# =====================================================
+---
+# Create a pod with the no-access service account
+kind: Pod
+apiVersion: v1
+metadata:
+  name: no-access-pod
+spec:
+  serviceAccountName: no-access-sa
+  containers:
+  - name: no-access-container
+    image: ibmcloudprivate/k8s-service-accounts
+
+
+---
+# Create a pod with the secret-access service account
+kind: Pod
+apiVersion: v1
+metadata:
+  name: secret-access-pod
+spec:
+  serviceAccountName: secret-access-sa
+  containers:
+  - name: secret-access-container
+    image: ibmcloudprivate/k8s-service-accounts
