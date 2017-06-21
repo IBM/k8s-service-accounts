@@ -1,7 +1,7 @@
 ---
 # A role with no access
 apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: Role
+kind: ClusterRole
 metadata:
   name: no-access-cr
 rules:
@@ -12,7 +12,7 @@ rules:
 ---
 # A role for reading/listing secrets
 apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: Role
+kind: ClusterRole
 metadata:
   name: secret-access-cr
 rules:
