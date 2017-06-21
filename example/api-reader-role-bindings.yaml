@@ -8,8 +8,8 @@ subjects:
 - kind: ServiceAccount
   name: no-access-sa
 roleRef:
-  kind: Role
-  name: no-access-role
+  kind: ClusterRole
+  name: no-access-cr
   apiGroup: rbac.authorization.k8s.io
 
 ---
@@ -22,6 +22,6 @@ subjects:
 - kind: ServiceAccount
   name: secret-access-sa
 roleRef:
-  kind: Role
-  name: secret-access-role
+  kind: ClusterRole
+  name: secret-access-cr
   apiGroup: rbac.authorization.k8s.io
