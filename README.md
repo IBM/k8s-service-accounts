@@ -1,4 +1,7 @@
 # k8s-service-accounts
+This repository accompanies the article: https://medium.com/@jcantosz/service-accounts-and-auditing-in-kubernetes-13255c8424fa
+
+Dockerfile automatically built here: https://hub.docker.com/r/ibmcloudprivate/k8s-service-accounts/
 
 ## Directories
 **examples:** contains example YAMLs for creating service accounts in Kubernetes
