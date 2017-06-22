@@ -4,9 +4,9 @@ This repository accompanies the article: https://medium.com/@jcantosz/service-ac
 Dockerfile automatically built here: https://hub.docker.com/r/ibmcloudprivate/k8s-service-accounts/
 
 ## Directories
-**examples:** contains example YAMLs for creating service accounts in Kubernetes
+**project root:** contains example YAMLs for creating service accounts in Kubernetes
 
-**docker:** contains Dockerfile used in the create the image in
+**/docker:** contains Dockerfile used in the create the image in
 
 
 ## Running on Minikube
